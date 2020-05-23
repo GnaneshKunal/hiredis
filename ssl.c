@@ -271,7 +271,7 @@ int redisSecureConnection(redisContext *c, const char *capath,
     SSL_CTX_set_info_callback(ssl_ctx, sslLogCallback);
 #endif
     SSL_CTX_set_options(ssl_ctx, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
-    SSL_CTX_set_verify(ssl_ctx, SSL_VERIFY_PEER, NULL);
+    SSL_CTX_set_verify(ssl_ctx, SSL_VERIFY_NONE, NULL);
     if ((certpath != NULL && keypath == NULL) || (keypath != NULL && certpath == NULL)) {
         __redisSetError(c, REDIS_ERR_OTHER, "certpath and keypath must be specified together");
         goto error;
