@@ -43,7 +43,6 @@
 #endif
 
 #include <openssl/ssl.h>
-#include <openssl/err.h>
 
 #include "win32.h"
 #include "async_private.h"
@@ -208,7 +207,7 @@ static int redisSSLConnect(redisContext *c, SSL_CTX *ssl_ctx, SSL *ssl) {
     SSL_set_fd(rssl->ssl, c->fd);
     SSL_set_connect_state(rssl->ssl);
 
-    ERR_clear_error();
+    /* ERR_clear_error(); */
     int rv = SSL_connect(rssl->ssl);
     if (rv == 1) {
         c->privdata = rssl;
@@ -227,9 +226,10 @@ static int redisSSLConnect(redisContext *c, SSL_CTX *ssl_ctx, SSL *ssl) {
         if (rv == SSL_ERROR_SYSCALL)
             snprintf(err,sizeof(err)-1,"SSL_connect failed: %s",strerror(errno));
         else {
-            unsigned long e = ERR_peek_last_error();
-            snprintf(err,sizeof(err)-1,"SSL_connect failed: %s",
-                    ERR_reason_error_string(e));
+/*            unsigned long e = ERR_peek_last_error(); */
+/*            snprintf(err,sizeof(err)-1,"SSL_connect failed: %s", */
+/*                    ERR_reason_error_string(e)); */
+          snprintf(err, sizeof(err) - 1, "SSL_connect failed: Something went wrong");
         }
         __redisSetError(c, REDIS_ERR_IO, err);
     }
